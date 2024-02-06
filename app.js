@@ -3,6 +3,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
+const _ = require("lodash");
 
 const app = express();
 
@@ -17,39 +18,55 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 app.set("view engine", "ejs");
 
+const posts = [];
+
 app.get("/", function (req, res) {
-  res.render("home", { homeStartingContent: homeStartingContent });
+  res.render("home", { homeStartingContent: homeStartingContent , postsArray: posts});
 });
 
-app.get("/about", function (req, res){
-  res.render("about", { aboutStartingContent: aboutStartingContent });
-})
-
-app.get("/contact", function (req, res){
-  res.render("contact", { contactStartingContent: contactStartingContent });
+app.get("/:postName", function (req, res){
+  if(req.params.postName === "about"){
+    res.render("about", { aboutStartingContent: aboutStartingContent });
+  }
+  else if(req.params.postName === "contact"){
+    res.render("contact", { contactStartingContent: contactStartingContent });
+  }
+  else if(req.params.postName === "compose"){
+    res.render("compose");
+  }
 });
 
-app.get("/compose", function (req, res){
-  res.render("compose");
+app.get("/posts/:postName", function (req, res){
+  const requestedTitle = _.lowerCase(req.params.postName);
+
+  posts.forEach(function(post){
+    const storedTitle = _.lowerCase(post.title);
+    if(storedTitle === requestedTitle){
+      console.log("Match found");
+    }
+  });
 });
 
+app.post("/:postName", function (req, res){
+  if(req.params.postName === ""){
+    res.redirect("/");
+  }
+  else if(req.params.postName === "about"){
+    res.redirect("/about");
+  }
+  else if(req.params.postName === "contact"){
+    res.redirect("/contact");
+  }
+  else if(req.params.postName === "compose"){
+    const post = {
+      title: req.body.postTitle,
+      content: req.body.postBody
+    };
+    posts.push(post);
+    res.redirect("/");
+  }
 
-
-app.post("/", function (req, res) {
-  res.redirect("/");
 });
-
-app.post("/about", function (req, res){
-  res.redirect("/about");
-});
-
-app.post("/contact", function (req, res){
-  res.redirect("/contact");
-});
-
-app.post("/compose", function (req, res){
-  res.redirect("/compose");
-})
 
 
 
