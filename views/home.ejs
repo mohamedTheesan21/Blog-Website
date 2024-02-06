@@ -5,11 +5,13 @@
 </div>
 <div class="container mt-2">
   <% postsArray.forEach(function(post) { %>
-    <div class="post">
-      <h3><%= post.title %></h3>
-      <p><%= post.content %></p>
-      <!-- <a href="/posts/<%= post._id %>">Read more</a> -->
+  <div class="post my-3">
+    <h3><%= post.title %></h3>
+    <div class="d-flex flex-row">
+      <p><%= post.content.slice(0, 100) %> . . .</p>
+      <a href="/posts/<%= post.title %>">Read more</a>
     </div>
+  </div>
   <% }); %>
 </div>
 
