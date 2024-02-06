@@ -29,6 +29,12 @@ app.get("/contact", function (req, res){
   res.render("contact", { contactStartingContent: contactStartingContent });
 });
 
+app.get("/compose", function (req, res){
+  res.render("compose");
+});
+
+
+
 app.post("/", function (req, res) {
   res.redirect("/");
 });
@@ -40,6 +46,13 @@ app.post("/about", function (req, res){
 app.post("/contact", function (req, res){
   res.redirect("/contact");
 });
+
+app.post("/compose", function (req, res){
+  res.redirect("/compose");
+})
+
+
+
 
 app.listen(3000, function () {
   console.log("Server started on port 3000");
